@@ -32,14 +32,16 @@ Settings persist in `localStorage`.
 
 | Exercise | Pattern (from the root) | Length at 100 BPM |
 | --- | --- | --- |
-| Semitone Ladder | chromatic, up 4 semitones and back | 7.8 s |
-| Five-Note Scale | 1 2 3 4 5 4 3 2 1 | 8.4 s |
-| Octave Arpeggio | 1 3 5 8 5 3 1 | 7.2 s |
-| Sustained Fifth | root, fifth, root — four beats each | 9.6 s |
-| Octave Siren (lip trill) | scale run up an octave and back, eighth notes | 7.5 s |
+| Five-Note Scale | 1 2 3 4 5 4 3 2 1, eighth notes | 3.6 s |
+| Octave Arpeggio | 1 3 5 8 5 3 1, eighth notes | 3.3 s |
+| Sustained Fifth | root, fifth, root — one beat each | 3.0 s |
+| Octave Siren (lip trill) | scale run up an octave and back, sixteenths | 3.8 s |
 
-Each is preceded by a major chord on the sequence root, and every sequence moves one degree up
-(or down) the key's scale.
+Durations are in beats, so the tempo slider is the pulse you count: pattern notes are eighths
+(two per beat), and each sequence opens with a one-beat chord on its root.
+
+Every sequence moves one degree up (or down) the key's scale, except Five-Note Scale, which steps
+chromatically.
 
 ## Adding an exercise
 
