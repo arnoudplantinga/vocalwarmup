@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Vocal Warmup</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<main class="app">
+  <header class="header">
+    <h1>Vocal Warmup</h1>
+    <select id="exercise" class="exercise-select" aria-label="Exercise"></select>
+  </header>
+
+  <section class="stage">
+    <div class="key-display">
+      <span id="key-now" class="key-now">C4</span>
+      <span class="key-label">current key</span>
+    </div>
+    <div class="progress" role="progressbar" aria-label="Sequence progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+      <div id="progress-fill" class="progress-fill"></div>
+    </div>
+    <p id="status" class="status" role="status"></p>
+  </section>
+
+  <section class="direction">
+    <div class="segmented" role="group" aria-label="Direction">
+      <button id="dir-up" class="seg active" aria-pressed="true">Up</button>
+      <button id="dir-stay" class="seg" aria-pressed="false">Stay</button>
+      <button id="dir-down" class="seg" aria-pressed="false">Down</button>
+    </div>
+  </section>
+
+  <section class="transport">
+    <button id="back" class="round" aria-label="Previous sequence">&#9664;&#9664;</button>
+    <button id="playpause" class="round primary" aria-label="Play">&#9654;</button>
+    <button id="forward" class="round" aria-label="Next sequence">&#9654;&#9654;</button>
+  </section>
+
+  <section class="controls">
+    <div class="control">
+      <label>Key</label>
+      <button id="key-button" class="wide" aria-haspopup="true" aria-expanded="false">C4</button>
+      <div id="key-picker" class="key-picker" hidden></div>
+      <p class="hint">Key of the exercise — sequences climb its scale. Saved as the starting key for all exercises.</p>
+    </div>
+
+    <div class="control">
+      <label for="tempo">Tempo <span id="tempo-value" class="mono">100</span> BPM</label>
+      <input id="tempo" type="range" min="40" max="160" step="1" value="100" />
+      <button id="a-tempo" class="ghost">a tempo</button>
+    </div>
+  </section>
+
+  <footer class="footer">Space = play/pause &middot; &larr; / &rarr; = previous / next sequence</footer>
+</main>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
