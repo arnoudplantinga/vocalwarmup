@@ -14,6 +14,16 @@ which is also when the piano samples are loaded.
 It must be served over HTTP — opening `index.html` from disk fails, because ES modules and
 `fetch()` of the samples are blocked on `file://`.
 
+## Deploying to GitHub Pages
+
+`.github/workflows/pages.yml` publishes the repository as-is on every push to `main` (there is no
+build step). To turn it on: push the repo to GitHub, then **Settings → Pages → Build and
+deployment → Source: GitHub Actions**. The workflow can also be run by hand from the Actions tab.
+
+The site ends up at `https://<user>.github.io/<repo>/`. Asset paths are resolved relative to the
+page and to `js/audio.js`, so the sub-path does not need configuring. `.nojekyll` stops GitHub
+running the files through Jekyll.
+
 ## Controls
 
 - **Progress bar** — position within the current sequence (chords + pattern + rest).

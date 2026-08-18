@@ -45,7 +45,9 @@ export function loadSamples() {
   if (!loading) {
     loading = Promise.all(
       Object.entries(SAMPLES).map(async ([name, midi]) => {
-        const res = await fetch(`samples/piano/${name}.mp3`);
+        // Resolve against this module, so the app works from any sub-path (e.g. GitHub Pages).
+        const url = new URL(`../samples/piano/${name}.mp3`, import.meta.url);
+        const res = await fetch(url);
         if (!res.ok) throw new Error(`Could not load sample ${name}.mp3`);
         buffers.set(midi, await ctx.decodeAudioData(await res.arrayBuffer()));
       })
