@@ -1,13 +1,48 @@
 :root {
+  /* Light palette. The dark one is applied below, either by the device
+     preference or by an explicit choice in data-theme. */
+  --bg: #f2f5fa;
+  --panel: #ffffff;
+  --panel-2: #e9edf5;
+  --text: #161b26;
+  --muted: #5c6679;
+  --accent: #12996f;
+  --accent-ink: #ffffff;
+  --accent-dim: #b8e8d5;
+  --border: #d3dae6;
+  --shadow: 0 12px 30px rgba(22, 27, 38, 0.18);
+  color-scheme: light;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #10131a;
+    --panel: #1a1f2b;
+    --panel-2: #222838;
+    --text: #e9ecf3;
+    --muted: #97a0b5;
+    --accent: #6ee7b7;
+    --accent-ink: #0d1a16;
+    --accent-dim: #2f6f5b;
+    --border: #2c3346;
+    --shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
   --bg: #10131a;
   --panel: #1a1f2b;
   --panel-2: #222838;
   --text: #e9ecf3;
   --muted: #97a0b5;
   --accent: #6ee7b7;
+  --accent-ink: #0d1a16;
   --accent-dim: #2f6f5b;
   --border: #2c3346;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
@@ -37,6 +72,26 @@ h1 { font-size: 1.25rem; margin: 0; letter-spacing: 0.02em; }
 .exercise-select,
 button,
 input[type="range"] { font: inherit; }
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.theme-toggle {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.theme-toggle:hover { border-color: var(--accent); }
 
 .exercise-select {
   background: var(--panel);
@@ -132,7 +187,7 @@ input[type="range"] { font: inherit; }
   font-size: 1.5rem;
   background: var(--accent);
   border-color: var(--accent);
-  color: #0d1a16;
+  color: var(--accent-ink);
 }
 
 .round:hover { border-color: var(--accent); }
@@ -187,7 +242,7 @@ input[type="range"] { font: inherit; }
   background: var(--panel-2);
   border: 1px solid var(--border);
   border-radius: 10px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+  box-shadow: var(--shadow);
 }
 
 /* Author `display: grid` above outranks the UA rule for [hidden], so restate it. */

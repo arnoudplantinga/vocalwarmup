@@ -3,6 +3,8 @@ import { MAX_MIDI, MIN_MIDI, Transport } from './scheduler.js';
 
 const NOTE_NAMES = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
 const DEFAULT_BPM = 82;
+const THEMES = ['system', 'light', 'dark']; // cycled by the theme button
+const THEME_ICONS = { system: '◐', light: '☀', dark: '☾' };
 const STORE_KEY = 'vocal-warmup-settings';
 
 const noteName = (midi) => `${NOTE_NAMES[midi % 12]}${Math.floor(midi / 12) - 1}`;
@@ -22,6 +24,7 @@ const el = {
     tempo: $('tempo'),
     tempoValue: $('tempo-value'),
     aTempo: $('a-tempo'),
+    theme: $('theme'),
     dirUp: $('dir-up'),
     dirDown: $('dir-down'),
 };
@@ -34,7 +37,13 @@ const transport = new Transport(getExercise(settings.exerciseId), {
 });
 
 function loadSettings() {
-    const defaults = { startMidi: 60, bpm: DEFAULT_BPM, direction: 1, exerciseId: EXERCISES[0].id };
+    const defaults = {
+        startMidi: 60,
+        bpm: DEFAULT_BPM,
+        direction: 1,
+        exerciseId: EXERCISES[0].id,
+        theme: 'system',
+    };
     try {
         return { ...defaults, ...JSON.parse(localStorage.getItem(STORE_KEY) || '{}') };
     } catch (e) {
@@ -57,6 +66,16 @@ function renderKey() {
     el.keyButton.textContent = noteName(transport.tonicMidi);
     el.back.disabled = !transport.fits(transport.displayIndex - transport.skipDirection);
     el.forward.disabled = !transport.fits(transport.displayIndex + transport.skipDirection);
+}
+
+/** 'system' follows the device; 'light' and 'dark' pin the palette via data-theme. */
+function applyTheme() {
+    const theme = THEMES.includes(settings.theme) ? settings.theme : 'system';
+    if (theme === 'system') delete document.documentElement.dataset.theme;
+    else document.documentElement.dataset.theme = theme;
+    el.theme.textContent = THEME_ICONS[theme];
+    el.theme.setAttribute('aria-label', `Colour theme: ${theme}`);
+    el.theme.title = `Theme: ${theme}`;
 }
 
 function renderPlayState() {
@@ -175,6 +194,13 @@ for (const type of ['pointerdown', 'click']) {
 }
 window.addEventListener('blur', closePicker);
 
+el.theme.addEventListener('click', () => {
+    const next = (THEMES.indexOf(settings.theme) + 1) % THEMES.length;
+    settings.theme = THEMES[next];
+    saveSettings();
+    applyTheme();
+});
+
 el.tempo.addEventListener('input', () => {
     const bpm = Number(el.tempo.value);
     el.tempoValue.textContent = bpm;
@@ -240,6 +266,7 @@ transport.onLimit = () => {
 
 el.tempo.value = settings.bpm;
 el.tempoValue.textContent = settings.bpm;
+applyTheme();
 setDirection(settings.direction);
 renderPlayState();
 renderKey();
