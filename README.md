@@ -28,6 +28,7 @@ running the files through Jekyll.
 
 - **Progress bar** — position within the current sequence (chords + pattern + rest).
 - **◀◀ / ▶ / ▶▶** — previous sequence, play/pause, next sequence. Space and ← / → do the same.
+  ↑ / ↓ toggle the direction arrows.
 - **Key** — the key of the exercise. Sequences walk up (or down) that key's scale, so from C4 the
   roots go C D E F G A B C. Also saved as the starting key for every exercise. Close the picker by
   choosing a key, pressing Escape, or clicking anywhere outside it.

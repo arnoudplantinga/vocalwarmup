@@ -220,6 +220,12 @@ document.addEventListener('keydown', (e) => {
         el.forward.click();
     } else if (e.code === 'ArrowLeft') {
         el.back.click();
+    } else if (e.code === 'ArrowUp') {
+        e.preventDefault(); // otherwise the page scrolls
+        el.dirUp.click();
+    } else if (e.code === 'ArrowDown') {
+        e.preventDefault();
+        el.dirDown.click();
     }
 });
 
