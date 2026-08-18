@@ -39,8 +39,9 @@ running the files through Jekyll.
   pressing one releases the other. Default ↑. The skip buttons still step a degree at a time while
   neither is pressed.
 
-- **Theme button** (top right) — cycles ◐ system → ☀ light → ☾ dark. System follows the device's
-  `prefers-color-scheme`; the other two pin the palette with `data-theme` on `<html>`.
+- **Theme button** (top right) — switches between light and dark, and shows the palette it will
+  switch to. Until it is used the page follows the device's `prefers-color-scheme`, tracking it
+  live; once used, the choice is pinned with `data-theme` on `<html>` and remembered.
 
 Settings persist in `localStorage`.
 

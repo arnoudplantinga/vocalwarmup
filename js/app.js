@@ -3,8 +3,7 @@ import { MAX_MIDI, MIN_MIDI, Transport } from './scheduler.js';
 
 const NOTE_NAMES = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
 const DEFAULT_BPM = 82;
-const THEMES = ['system', 'light', 'dark']; // cycled by the theme button
-const THEME_ICONS = { system: '◐', light: '☀', dark: '☾' };
+const DARK_QUERY = window.matchMedia('(prefers-color-scheme: dark)');
 const STORE_KEY = 'vocal-warmup-settings';
 
 const noteName = (midi) => `${NOTE_NAMES[midi % 12]}${Math.floor(midi / 12) - 1}`;
@@ -42,7 +41,7 @@ function loadSettings() {
         bpm: DEFAULT_BPM,
         direction: 1,
         exerciseId: EXERCISES[0].id,
-        theme: 'system',
+        theme: null, // no choice made yet: follow the device
     };
     try {
         return { ...defaults, ...JSON.parse(localStorage.getItem(STORE_KEY) || '{}') };
@@ -68,14 +67,21 @@ function renderKey() {
     el.forward.disabled = !transport.fits(transport.displayIndex + transport.skipDirection);
 }
 
-/** 'system' follows the device; 'light' and 'dark' pin the palette via data-theme. */
+/** The palette in force: the stored choice, or the device preference until one is made. */
+function currentTheme() {
+    if (settings.theme === 'light' || settings.theme === 'dark') return settings.theme;
+    return DARK_QUERY.matches ? 'dark' : 'light';
+}
+
 function applyTheme() {
-    const theme = THEMES.includes(settings.theme) ? settings.theme : 'system';
-    if (theme === 'system') delete document.documentElement.dataset.theme;
-    else document.documentElement.dataset.theme = theme;
-    el.theme.textContent = THEME_ICONS[theme];
-    el.theme.setAttribute('aria-label', `Colour theme: ${theme}`);
-    el.theme.title = `Theme: ${theme}`;
+    const theme = currentTheme();
+    if (settings.theme) document.documentElement.dataset.theme = theme;
+    else delete document.documentElement.dataset.theme; // let the media query decide
+    // The button offers the other palette, so it shows that one's icon.
+    const other = theme === 'dark' ? 'light' : 'dark';
+    el.theme.textContent = other === 'dark' ? '☾' : '☀';
+    el.theme.setAttribute('aria-label', `Switch to ${other} theme`);
+    el.theme.title = `Switch to ${other} theme`;
 }
 
 function renderPlayState() {
@@ -195,10 +201,14 @@ for (const type of ['pointerdown', 'click']) {
 window.addEventListener('blur', closePicker);
 
 el.theme.addEventListener('click', () => {
-    const next = (THEMES.indexOf(settings.theme) + 1) % THEMES.length;
-    settings.theme = THEMES[next];
+    settings.theme = currentTheme() === 'dark' ? 'light' : 'dark';
     saveSettings();
     applyTheme();
+});
+
+// Until a choice is made, follow the device if it changes while the page is open.
+DARK_QUERY.addEventListener('change', () => {
+    if (!settings.theme) applyTheme();
 });
 
 el.tempo.addEventListener('input', () => {
