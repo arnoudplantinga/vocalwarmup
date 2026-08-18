@@ -97,7 +97,15 @@ input[type="range"] { font: inherit; }
   margin-top: 18px;
 }
 
-.direction .segmented { width: 300px; }
+.direction .segmented { width: auto; }
+
+.seg.arrow {
+  flex: 0 0 auto;
+  width: 72px;
+  padding: 10px 0;
+  font-size: 1.3rem;
+  line-height: 1;
+}
 
 .transport {
   display: flex;

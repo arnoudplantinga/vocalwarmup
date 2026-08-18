@@ -33,8 +33,10 @@ running the files through Jekyll.
   choosing a key, pressing Escape, or clicking anywhere outside it.
 - **Tempo** — 40–160 BPM, default 100 (`DEFAULT_BPM` in `js/app.js`); *a tempo* snaps back to it.
   Changes apply within ~150 ms, mid-note if need be.
-- **Up / Stay / Down** — whether each sequence moves a scale degree up, repeats the same key, or
-  moves down. Default Up. The skip buttons still step a degree at a time while holding.
+- **↑ / ↓** — two toggles: ↑ transposes a scale degree up after each sequence, ↓ transposes down,
+  and with neither pressed the exercise stays in the current key. They are mutually exclusive, so
+  pressing one releases the other. Default ↑. The skip buttons still step a degree at a time while
+  neither is pressed.
 
 Settings persist in `localStorage`.
 

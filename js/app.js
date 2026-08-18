@@ -23,7 +23,6 @@ const el = {
     tempoValue: $('tempo-value'),
     aTempo: $('a-tempo'),
     dirUp: $('dir-up'),
-    dirStay: $('dir-stay'),
     dirDown: $('dir-down'),
 };
 
@@ -195,7 +194,6 @@ function setDirection(dir) {
     saveSettings();
     for (const [button, value] of [
         [el.dirUp, 1],
-        [el.dirStay, 0],
         [el.dirDown, -1],
     ]) {
         button.classList.toggle('active', dir === value);
@@ -204,9 +202,10 @@ function setDirection(dir) {
     renderKey();
 }
 
-el.dirUp.addEventListener('click', () => setDirection(1));
-el.dirStay.addEventListener('click', () => setDirection(0));
-el.dirDown.addEventListener('click', () => setDirection(-1));
+// The arrows are toggles: pressing the active one releases it, which stays in key,
+// and pressing the other one takes over, so both can never be on at once.
+el.dirUp.addEventListener('click', () => setDirection(transport.direction === 1 ? 0 : 1));
+el.dirDown.addEventListener('click', () => setDirection(transport.direction === -1 ? 0 : -1));
 
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
