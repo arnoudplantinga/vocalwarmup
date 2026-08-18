@@ -16,7 +16,7 @@ It must be served over HTTP — opening `index.html` from disk fails, because ES
 
 ## Controls
 
-- **Progress bar** — position within the current sequence (chord + pattern + rest).
+- **Progress bar** — position within the current sequence (chords + pattern + rest).
 - **◀◀ / ▶ / ▶▶** — previous sequence, play/pause, next sequence. Space and ← / → do the same.
 - **Key** — the key of the exercise. Sequences walk up (or down) that key's scale, so from C4 the
   roots go C D E F G A B C. Also saved as the starting key for every exercise. Close the picker by
@@ -38,7 +38,8 @@ Settings persist in `localStorage`.
 | Octave Siren (lip trill) | scale run up an octave and back, sixteenths | 3.8 s |
 
 Durations are in beats, so the tempo slider is the pulse you count: pattern notes are eighths
-(two per beat), and each sequence opens with a one-beat chord on its root.
+(two per beat), and each sequence is framed by a chord on its root — `chordStart` before the
+pattern and `chordEnd` after it. Both are optional.
 
 Every sequence moves one degree up (or down) the key's scale, except Five-Note Scale, which steps
 chromatically.
@@ -51,7 +52,8 @@ Append one object to `EXERCISES` in `js/exercises.js`; nothing else changes.
 {
   id: 'octave-arpeggio',
   name: 'Octave Arpeggio',
-  chord: { intervals: [0, 4, 7], beats: 2 },  // played before the pattern; omit for none
+  chordStart: { intervals: [0, 4, 7], beats: 1 }, // played before the pattern; omit for none
+  chordEnd: { intervals: [0, 4, 7], beats: 1 },   // played after it; also optional
   notes: [                                    // interval = semitones from the root
     { interval: 0, beats: 1 },
     { interval: 4, beats: 1 },

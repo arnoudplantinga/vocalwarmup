@@ -2,7 +2,7 @@ import { EXERCISES, getExercise } from './exercises.js';
 import { MAX_MIDI, MIN_MIDI, Transport } from './scheduler.js';
 
 const NOTE_NAMES = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
-const DEFAULT_BPM = 100;
+const DEFAULT_BPM = 82;
 const STORE_KEY = 'vocal-warmup-settings';
 
 const noteName = (midi) => `${NOTE_NAMES[midi % 12]}${Math.floor(midi / 12) - 1}`;
@@ -23,7 +23,7 @@ const el = {
     tempoValue: $('tempo-value'),
     aTempo: $('a-tempo'),
     dirUp: $('dir-up'),
-  dirStay: $('dir-stay'),
+    dirStay: $('dir-stay'),
     dirDown: $('dir-down'),
 };
 

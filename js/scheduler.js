@@ -11,13 +11,13 @@ const START_LEAD_SEC = 0.08; // breathing room before the first note
 export const MIN_MIDI = 48; // C3
 export const MAX_MIDI = 84; // C6
 
-/** Chord, notes and closing rest as one flat list of timed events. */
+/** Opening chord, notes, closing chord and rest as one flat list of timed events. */
 function eventsFor(exercise) {
   const events = [];
-  if (exercise.chord) {
-    events.push({ intervals: exercise.chord.intervals, beats: exercise.chord.beats, chord: true });
-  }
+  const chord = (c) => ({ intervals: c.intervals, beats: c.beats, chord: true });
+  if (exercise.chordStart) events.push(chord(exercise.chordStart));
   for (const n of exercise.notes) events.push({ intervals: [n.interval], beats: n.beats });
+  if (exercise.chordEnd) events.push(chord(exercise.chordEnd));
   if (exercise.restBeats) events.push({ intervals: [], beats: exercise.restBeats });
   return events;
 }
