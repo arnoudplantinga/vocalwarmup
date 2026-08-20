@@ -181,7 +181,10 @@ el.exercise.value = transport.exercise.id;
 el.exercise.addEventListener('change', () => {
     settings.exerciseId = el.exercise.value;
     saveSettings();
+    transport.pause();
+    setDirection(1);
     transport.setExercise(getExercise(settings.exerciseId));
+    renderPlayState();
     renderKey();
 });
 
