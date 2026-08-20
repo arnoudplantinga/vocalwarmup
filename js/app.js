@@ -129,6 +129,38 @@ function status(msg) {
     el.status.textContent = msg;
 }
 
+// --- wake lock -----------------------------------------------------------
+// Keep the screen from sleeping mid-exercise; browsers without the API just
+// keep their default behaviour.
+
+let wakeLock = null;
+
+async function acquireWakeLock() {
+    if (!('wakeLock' in navigator) || wakeLock) return;
+    try {
+        wakeLock = await navigator.wakeLock.request('screen');
+        wakeLock.addEventListener('release', () => (wakeLock = null));
+    } catch (e) {
+        wakeLock = null;
+    }
+}
+
+async function releaseWakeLock() {
+    if (!wakeLock) return;
+    const lock = wakeLock;
+    wakeLock = null;
+    try {
+        await lock.release();
+    } catch (e) {
+        /* already released */
+    }
+}
+
+// The lock is dropped automatically when the tab is hidden; reclaim it on return.
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && transport.playing) acquireWakeLock();
+});
+
 function frame() {
     const p = transport.progress();
     el.progressFill.style.width = `${(p * 100).toFixed(1)}%`;
@@ -163,6 +195,8 @@ el.playpause.addEventListener('click', async () => {
     } catch (e) {
         status('Could not start audio: ' + e.message);
     }
+    if (transport.playing) acquireWakeLock();
+    else releaseWakeLock();
     renderPlayState();
     renderKey();
 });
@@ -267,6 +301,7 @@ document.addEventListener('keydown', (e) => {
 
 transport.onSequence = () => renderKey();
 transport.onLimit = () => {
+    releaseWakeLock();
     renderPlayState();
     renderKey();
     status('Reached the end of the range — pick a new key to continue.');
