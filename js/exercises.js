@@ -39,7 +39,7 @@ export const EXERCISES = [
     {
         id: 'octave-arpeggio',
         name: 'Octave Arpeggio',
-        chordStart: { intervals: [0, 4, 7], beats: 2 },
+        chordStart: { intervals: [0, 4, 7], beats: 1 },
         notes: [
             { interval: 0, beats: 0.5 },
             { interval: 4, beats: 0.5 },
@@ -49,7 +49,7 @@ export const EXERCISES = [
             { interval: 4, beats: 0.5 },
             { interval: 0, beats: 1 },
         ],
-        chordEnd: { intervals: [0, 4, 7], beats: 1 },
+        chordEnd: { intervals: [0, 4, 7], beats: 0.5 },
         scale: 'major',
         step: { mode: 'chromatic', amount: 1 },
         restBeats: 0.5,
