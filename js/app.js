@@ -18,6 +18,7 @@ const el = {
     back: $('back'),
     playpause: $('playpause'),
     forward: $('forward'),
+    reset: $('reset'),
     keyButton: $('key-button'),
     keyPicker: $('key-picker'),
     tempo: $('tempo'),
@@ -207,6 +208,15 @@ el.playpause.addEventListener('click', async () => {
 el.back.addEventListener('click', () => skip(-1));
 el.forward.addEventListener('click', () => skip(1));
 
+el.reset.addEventListener('click', () => {
+    closePicker();
+    transport.reset();
+    releaseWakeLock();
+    renderPlayState();
+    renderKey();
+    status('');
+});
+
 function skip(delta) {
     closePicker();
     if (!transport.skip(delta)) {
@@ -262,7 +272,7 @@ el.aTempo.addEventListener('click', () => {
 });
 
 function setDirection(dir) {
-    transport.setDirection(dir);
+    transport.setDirection(dir, { immediate: true });
     settings.direction = dir;
     saveSettings();
     for (const [button, value] of [

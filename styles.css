@@ -266,7 +266,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 .mono { font-variant-numeric: tabular-nums; color: var(--text); }
 
 .ghost {
-  margin-top: 12px;
+  display: block;
+  margin: 12px auto 0;
   padding: 8px 14px;
   border-radius: 8px;
   border: 1px solid var(--border);

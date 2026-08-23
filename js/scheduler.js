@@ -91,6 +91,12 @@ export class Transport {
     return this.playing ? (this.pause(), Promise.resolve()) : this.play();
   }
 
+  /** Stop playback and rewind the current exercise to its first sequence. */
+  reset() {
+    this.pause();
+    this.setIndex(0, { immediate: true });
+  }
+
   /** Jump one sequence in the current direction (+1 forward, -1 back). */
   skip(delta) {
     const target = this.displayIndex + this.skipDirection * delta;
@@ -138,8 +144,19 @@ export class Transport {
     this.setIndex(0, { immediate: true });
   }
 
-  setDirection(dir) {
-    this.direction = Math.sign(dir) | 0; // -1 down, 0 stay, +1 up
+  /**
+   * Set the transpose direction. When playing, `immediate` cuts the current
+   * sequence short and jumps straight to the next one in the new direction,
+   * instead of waiting for the in-progress sequence to finish naturally.
+   */
+  setDirection(dir, { immediate = false } = {}) {
+    const next = Math.sign(dir) | 0; // -1 down, 0 stay, +1 up
+    const changed = next !== this.direction;
+    this.direction = next;
+    if (immediate && changed && next !== 0 && this.playing) {
+      const target = this.displayIndex + next;
+      if (this.fits(target)) this.setIndex(target, { immediate: true });
+    }
   }
 
   setBpm(bpm) {
