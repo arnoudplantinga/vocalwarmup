@@ -18,6 +18,7 @@ const el = {
     back: $('back'),
     playpause: $('playpause'),
     forward: $('forward'),
+    reset: $('reset'),
     keyButton: $('key-button'),
     keyPicker: $('key-picker'),
     tempo: $('tempo'),
@@ -206,6 +207,15 @@ el.playpause.addEventListener('click', async () => {
 
 el.back.addEventListener('click', () => skip(-1));
 el.forward.addEventListener('click', () => skip(1));
+
+el.reset.addEventListener('click', () => {
+    closePicker();
+    transport.reset();
+    releaseWakeLock();
+    renderPlayState();
+    renderKey();
+    status('');
+});
 
 function skip(delta) {
     closePicker();

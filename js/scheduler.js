@@ -34,6 +34,7 @@ export class Transport {
     this.nextTime = 0; // audio time of the next event to schedule
     this.eventIdx = 0; // position within the current sequence
     this.beatOffset = 0; // beats elapsed in the current sequence
+    this.pendingAdvance = false; // the sequence has wrapped; apply direction once the new one starts
     this.timeline = []; // recently scheduled events, for progress and display
     this.onLimit = null; // called when the exercise runs out of range
     this.onSequence = null; // called when a new sequence starts sounding
@@ -91,6 +92,12 @@ export class Transport {
     return this.playing ? (this.pause(), Promise.resolve()) : this.play();
   }
 
+  /** Stop playback and rewind the current exercise to its first sequence. */
+  reset() {
+    this.pause();
+    this.setIndex(0, { immediate: true });
+  }
+
   /** Jump one sequence in the current direction (+1 forward, -1 back). */
   skip(delta) {
     const target = this.displayIndex + this.skipDirection * delta;
@@ -129,6 +136,7 @@ export class Transport {
     this.nextTime = time;
     this.eventIdx = 0;
     this.beatOffset = 0;
+    this.pendingAdvance = false;
   }
 
   setExercise(exercise) {
@@ -138,6 +146,7 @@ export class Transport {
     this.setIndex(0, { immediate: true });
   }
 
+  /** Set the transpose direction. Takes effect at the start of the next sequence. */
   setDirection(dir) {
     this.direction = Math.sign(dir) | 0; // -1 down, 0 stay, +1 up
   }
@@ -152,6 +161,13 @@ export class Transport {
     const t = now();
 
     while (this.nextTime < t + LOOKAHEAD_SEC) {
+      if (this.eventIdx === 0 && this.pendingAdvance) {
+        // Read direction as late as possible — right before the new sequence is
+        // scheduled — rather than baking it in when the old one merely wrapped,
+        // which could be a beat or two before the old sequence is actually heard out.
+        this.index += this.direction; // direction 0 repeats the same key
+        this.pendingAdvance = false;
+      }
       if (this.eventIdx === 0 && !this.fits(this.index)) {
         this.pause();
         if (this.onLimit) this.onLimit();
@@ -182,7 +198,7 @@ export class Transport {
       if (this.eventIdx >= this.events.length) {
         this.eventIdx = 0;
         this.beatOffset = 0;
-        this.index += this.direction; // direction 0 repeats the same key
+        this.pendingAdvance = true;
       }
     }
 
