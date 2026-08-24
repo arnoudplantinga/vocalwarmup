@@ -272,7 +272,7 @@ el.aTempo.addEventListener('click', () => {
 });
 
 function setDirection(dir) {
-    transport.setDirection(dir, { immediate: true });
+    transport.setDirection(dir);
     settings.direction = dir;
     saveSettings();
     for (const [button, value] of [

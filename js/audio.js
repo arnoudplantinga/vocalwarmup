@@ -84,7 +84,6 @@ export function playNote(midi, startTime, durationSec, velocity = 1) {
   env.connect(master);
   src.start(startTime);
   src.stop(startTime + durationSec + RELEASE_SEC);
-  src._startTime = startTime;
   active.add(src);
   src.onended = () => active.delete(src);
 }
@@ -95,20 +94,6 @@ export function playChord(midis, startTime, durationSec, velocity = 1) {
     // A tiny roll makes the chord sound played rather than triggered.
     playNote(m, startTime + i * 0.012, durationSec, scale);
   });
-}
-
-/** Cancel sources scheduled to start at or after `time`, leaving already-started ones ringing. */
-export function cancelScheduledAfter(time) {
-  if (!ctx) return;
-  for (const src of active) {
-    if (src._startTime < time) continue;
-    try {
-      src.stop(ctx.currentTime);
-    } catch (e) {
-      /* already stopped */
-    }
-    active.delete(src);
-  }
 }
 
 /** Silence everything scheduled or sounding, with a short fade to avoid clicks. */

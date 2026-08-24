@@ -1,7 +1,7 @@
 // Transport: schedules the exercise one note at a time on the audio clock, so a
 // tempo change lands within the lookahead window rather than at the next sequence.
 
-import { cancelScheduledAfter, ensureAudio, now, playChord, playNote, stopAll } from './audio.js';
+import { ensureAudio, now, playChord, playNote, stopAll } from './audio.js';
 import { bottomInterval, rootForIndex, sequenceBeats, topInterval } from './exercises.js';
 
 const LOOKAHEAD_SEC = 0.15; // how far ahead we schedule
@@ -34,6 +34,7 @@ export class Transport {
     this.nextTime = 0; // audio time of the next event to schedule
     this.eventIdx = 0; // position within the current sequence
     this.beatOffset = 0; // beats elapsed in the current sequence
+    this.pendingAdvance = false; // the sequence has wrapped; apply direction once the new one starts
     this.timeline = []; // recently scheduled events, for progress and display
     this.onLimit = null; // called when the exercise runs out of range
     this.onSequence = null; // called when a new sequence starts sounding
@@ -135,6 +136,7 @@ export class Transport {
     this.nextTime = time;
     this.eventIdx = 0;
     this.beatOffset = 0;
+    this.pendingAdvance = false;
   }
 
   setExercise(exercise) {
@@ -144,38 +146,9 @@ export class Transport {
     this.setIndex(0, { immediate: true });
   }
 
-  /**
-   * Set the transpose direction. When playing, `immediate` skips straight to
-   * the next sequence in the new direction as soon as the currently sounding
-   * note/chord ends — it doesn't wait out the rest of the in-progress
-   * sequence (its remaining notes, closing chord, and rest), but it also
-   * doesn't cut off what's already ringing.
-   */
-  setDirection(dir, { immediate = false } = {}) {
-    const next = Math.sign(dir) | 0; // -1 down, 0 stay, +1 up
-    const changed = next !== this.direction;
-    this.direction = next;
-    if (immediate && changed && next !== 0 && this.playing) {
-      const target = this.displayIndex + next;
-      if (this.fits(target)) this.advanceTo(target);
-    }
-  }
-
-  /**
-   * Continue playback into `index` right after whatever is currently
-   * sounding finishes, cancelling anything scheduled after that (which
-   * hasn't started yet, so nothing audible is cut off) instead of playing
-   * out the rest of the current sequence.
-   */
-  advanceTo(index) {
-    const t = now();
-    const current = this.eventAt(t);
-    const cutoff = current ? current.time + current.beats * current.secPerBeat : t;
-    cancelScheduledAfter(cutoff);
-    this.timeline = this.timeline.filter((e) => e.time < cutoff);
-    this.index = index;
-    this.startSequenceAt(Math.max(cutoff, t));
-    this.tick();
+  /** Set the transpose direction. Takes effect at the start of the next sequence. */
+  setDirection(dir) {
+    this.direction = Math.sign(dir) | 0; // -1 down, 0 stay, +1 up
   }
 
   setBpm(bpm) {
@@ -188,6 +161,13 @@ export class Transport {
     const t = now();
 
     while (this.nextTime < t + LOOKAHEAD_SEC) {
+      if (this.eventIdx === 0 && this.pendingAdvance) {
+        // Read direction as late as possible — right before the new sequence is
+        // scheduled — rather than baking it in when the old one merely wrapped,
+        // which could be a beat or two before the old sequence is actually heard out.
+        this.index += this.direction; // direction 0 repeats the same key
+        this.pendingAdvance = false;
+      }
       if (this.eventIdx === 0 && !this.fits(this.index)) {
         this.pause();
         if (this.onLimit) this.onLimit();
@@ -218,7 +198,7 @@ export class Transport {
       if (this.eventIdx >= this.events.length) {
         this.eventIdx = 0;
         this.beatOffset = 0;
-        this.index += this.direction; // direction 0 repeats the same key
+        this.pendingAdvance = true;
       }
     }
 
