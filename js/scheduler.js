@@ -1,7 +1,7 @@
 // Transport: schedules the exercise one note at a time on the audio clock, so a
 // tempo change lands within the lookahead window rather than at the next sequence.
 
-import { ensureAudio, now, playChord, playNote, stopAll } from './audio.js';
+import { cancelScheduledAfter, ensureAudio, now, playChord, playNote, stopAll } from './audio.js';
 import { bottomInterval, rootForIndex, sequenceBeats, topInterval } from './exercises.js';
 
 const LOOKAHEAD_SEC = 0.15; // how far ahead we schedule
@@ -145,9 +145,11 @@ export class Transport {
   }
 
   /**
-   * Set the transpose direction. When playing, `immediate` cuts the current
-   * sequence short and jumps straight to the next one in the new direction,
-   * instead of waiting for the in-progress sequence to finish naturally.
+   * Set the transpose direction. When playing, `immediate` skips straight to
+   * the next sequence in the new direction as soon as the currently sounding
+   * note/chord ends — it doesn't wait out the rest of the in-progress
+   * sequence (its remaining notes, closing chord, and rest), but it also
+   * doesn't cut off what's already ringing.
    */
   setDirection(dir, { immediate = false } = {}) {
     const next = Math.sign(dir) | 0; // -1 down, 0 stay, +1 up
@@ -155,8 +157,25 @@ export class Transport {
     this.direction = next;
     if (immediate && changed && next !== 0 && this.playing) {
       const target = this.displayIndex + next;
-      if (this.fits(target)) this.setIndex(target, { immediate: true });
+      if (this.fits(target)) this.advanceTo(target);
     }
+  }
+
+  /**
+   * Continue playback into `index` right after whatever is currently
+   * sounding finishes, cancelling anything scheduled after that (which
+   * hasn't started yet, so nothing audible is cut off) instead of playing
+   * out the rest of the current sequence.
+   */
+  advanceTo(index) {
+    const t = now();
+    const current = this.eventAt(t);
+    const cutoff = current ? current.time + current.beats * current.secPerBeat : t;
+    cancelScheduledAfter(cutoff);
+    this.timeline = this.timeline.filter((e) => e.time < cutoff);
+    this.index = index;
+    this.startSequenceAt(Math.max(cutoff, t));
+    this.tick();
   }
 
   setBpm(bpm) {

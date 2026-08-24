@@ -39,9 +39,10 @@ running the files through Jekyll.
 - **↑ / ↓** — two toggles: ↑ transposes a scale degree up after each sequence, ↓ transposes down,
   and with neither pressed the exercise stays in the current key. They are mutually exclusive, so
   pressing one releases the other. Default ↑. The skip buttons still step a degree at a time while
-  neither is pressed. Switching direction mid-playback takes effect immediately — it cuts the
-  in-progress sequence short and jumps to the next one in the new direction, rather than waiting
-  for the current sequence to finish.
+  neither is pressed. Switching direction mid-playback takes effect as soon as the currently
+  sounding note or chord ends — it doesn't cut off what's ringing, but it also doesn't wait out
+  the rest of the in-progress sequence (its remaining notes, closing chord, and rest) before
+  moving to the next one in the new direction.
 
 - **Theme button** (top right) — switches between light and dark, and shows the palette it will
   switch to. Until it is used the page follows the device's `prefers-color-scheme`, tracking it
