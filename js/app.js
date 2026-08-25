@@ -1,5 +1,6 @@
 import { EXERCISES, getExercise } from './exercises.js';
 import { MAX_MIDI, MIN_MIDI, Transport } from './scheduler.js';
+import { applyTranslations, detectLanguage, setLang, t } from './i18n.js';
 
 const NOTE_NAMES = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
 const DEFAULT_BPM = 82;
@@ -26,6 +27,7 @@ const el = {
     tempoValue: $('tempo-value'),
     aTempo: $('a-tempo'),
     theme: $('theme'),
+    lang: $('lang'),
     dirUp: $('dir-up'),
     dirDown: $('dir-down'),
 };
@@ -44,6 +46,7 @@ function loadSettings() {
         direction: 1,
         exerciseId: EXERCISES[0].id,
         theme: null, // no choice made yet: follow the device
+        lang: null, // no choice made yet: follow the device
     };
     try {
         return { ...defaults, ...JSON.parse(localStorage.getItem(STORE_KEY) || '{}') };
@@ -82,8 +85,30 @@ function applyTheme() {
     // The button offers the other palette, so it shows that one's icon.
     const other = theme === 'dark' ? 'light' : 'dark';
     el.theme.textContent = other === 'dark' ? '☾' : '☀';
-    el.theme.setAttribute('aria-label', `Switch to ${other} theme`);
-    el.theme.title = `Switch to ${other} theme`;
+    const label = t('theme.switchTo', { theme: t(`theme.${other}`) });
+    el.theme.setAttribute('aria-label', label);
+    el.theme.title = label;
+}
+
+/** The language in force: the stored choice, or the browser's language until one is made. */
+function currentLang() {
+    if (settings.lang === 'en' || settings.lang === 'nl') return settings.lang;
+    return detectLanguage();
+}
+
+function applyLanguage() {
+    const lang = currentLang();
+    setLang(lang);
+    document.documentElement.lang = lang;
+    applyTranslations(document);
+    // The button offers the other language, so it shows that one's code.
+    const other = lang === 'nl' ? 'en' : 'nl';
+    el.lang.textContent = other.toUpperCase();
+    for (const opt of el.exercise.options) {
+        opt.textContent = t(getExercise(opt.value).nameKey);
+    }
+    applyTheme();
+    renderPlayState();
 }
 
 const ICON_PLAY = '<svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path d="M6 4l14 8-14 8z" fill="currentColor"/></svg>';
@@ -91,7 +116,7 @@ const ICON_PAUSE = '<svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidde
 
 function renderPlayState() {
     el.playpause.innerHTML = transport.playing ? ICON_PAUSE : ICON_PLAY;
-    el.playpause.setAttribute('aria-label', transport.playing ? 'Pause' : 'Play');
+    el.playpause.setAttribute('aria-label', transport.playing ? t('playpause.pause') : t('playpause.play'));
 }
 
 function renderPicker() {
@@ -178,7 +203,7 @@ function frame() {
 for (const ex of EXERCISES) {
     const opt = document.createElement('option');
     opt.value = ex.id;
-    opt.textContent = ex.name;
+    opt.textContent = t(ex.nameKey);
     el.exercise.append(opt);
 }
 el.exercise.value = transport.exercise.id;
@@ -196,12 +221,12 @@ el.exercise.addEventListener('change', () => {
 el.playpause.addEventListener('click', async () => {
     closePicker();
     const starting = !transport.playing;
-    if (starting) status('Loading piano…');
+    if (starting) status(t('status.loading'));
     try {
         await transport.toggle();
         if (starting) status('');
     } catch (e) {
-        status('Could not start audio: ' + e.message);
+        status(t('status.audioError', { message: e.message }));
     }
     if (transport.playing) acquireWakeLock();
     else releaseWakeLock();
@@ -225,7 +250,7 @@ el.reset.addEventListener('click', () => {
 function skip(delta) {
     closePicker();
     if (!transport.skip(delta)) {
-        status('Reached the end of the range.');
+        status(t('status.rangeEnd'));
         return;
     }
     status('');
@@ -270,6 +295,12 @@ el.theme.addEventListener('click', () => {
     settings.theme = currentTheme() === 'dark' ? 'light' : 'dark';
     saveSettings();
     applyTheme();
+});
+
+el.lang.addEventListener('click', () => {
+    settings.lang = currentLang() === 'nl' ? 'en' : 'nl';
+    saveSettings();
+    applyLanguage();
 });
 
 // Until a choice is made, follow the device if it changes while the page is open.
@@ -337,14 +368,14 @@ transport.onLimit = () => {
     releaseWakeLock();
     renderPlayState();
     renderKey();
-    status('Reached the end of the range — pick a new key to continue.');
+    status(t('status.rangeEndPickKey'));
 };
 
 // --- init --------------------------------------------------------------
 
 el.tempo.value = settings.bpm;
 el.tempoValue.textContent = settings.bpm;
-applyTheme();
+applyLanguage();
 setDirection(settings.direction);
 renderPlayState();
 renderKey();

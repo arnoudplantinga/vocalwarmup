@@ -61,6 +61,7 @@ body {
 
 .header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
@@ -79,11 +80,14 @@ button { -webkit-tap-highlight-color: transparent; }
   display: flex;
   align-items: center;
   gap: 8px;
+  flex: 1 1 200px;
+  min-width: 0;
 }
 
 .theme-toggle {
   width: 40px;
   height: 40px;
+  flex-shrink: 0;
   border-radius: 10px;
   border: 1px solid var(--border);
   background: var(--panel);
@@ -101,6 +105,8 @@ button { -webkit-tap-highlight-color: transparent; }
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 8px 10px;
+  flex: 1;
+  min-width: 0;
 }
 
 .stage {
