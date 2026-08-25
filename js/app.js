@@ -21,6 +21,7 @@ const el = {
     reset: $('reset'),
     keyButton: $('key-button'),
     keyPicker: $('key-picker'),
+    keyInfo: $('key-info'),
     tempo: $('tempo'),
     tempoValue: $('tempo-value'),
     aTempo: $('a-tempo'),
@@ -234,19 +235,33 @@ el.keyButton.addEventListener('click', (e) => {
     else closePicker();
 });
 
+// The tooltip shows on hover, but touch devices have no hover — tap toggles it instead.
+el.keyInfo.addEventListener('click', (e) => {
+    e.stopPropagation();
+    el.keyInfo.classList.toggle('show');
+});
+
+function closeInfo() {
+    el.keyInfo.classList.remove('show');
+}
+
 // Close on any interaction outside the picker, including drags and scrolls.
 for (const type of ['pointerdown', 'click']) {
     document.addEventListener(
         type,
         (e) => {
-            if (el.keyPicker.hidden) return;
-            if (el.keyPicker.contains(e.target) || el.keyButton.contains(e.target)) return;
-            closePicker();
+            if (!el.keyPicker.hidden && !el.keyPicker.contains(e.target) && !el.keyButton.contains(e.target)) {
+                closePicker();
+            }
+            if (!el.keyInfo.contains(e.target)) closeInfo();
         },
         true
     );
 }
-window.addEventListener('blur', closePicker);
+window.addEventListener('blur', () => {
+    closePicker();
+    closeInfo();
+});
 
 el.theme.addEventListener('click', () => {
     settings.theme = currentTheme() === 'dark' ? 'light' : 'dark';
@@ -294,6 +309,7 @@ el.dirDown.addEventListener('click', () => setDirection(transport.direction === 
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
         closePicker();
+        closeInfo();
         return;
     }
     if (e.target instanceof Element && e.target.matches('input, select')) return;
