@@ -24,6 +24,14 @@ The site ends up at `https://<user>.github.io/<repo>/`. Asset paths are resolved
 page and to `js/audio.js`, so the sub-path does not need configuring. `.nojekyll` stops GitHub
 running the files through Jekyll.
 
+## Installing as an app
+
+The app is an installable PWA (`manifest.json` + `service-worker.js`): on Android/Chrome, use the
+browser menu's "Add to Home Screen" / "Install app" prompt. The service worker precaches the app
+shell and the piano samples on first load, so it keeps working offline afterwards. Regenerate the
+icons in `icons/` with `python3 scripts/make_icons.py` (requires Pillow) if the app's accent
+colour changes.
+
 ## Controls
 
 - **Progress bar** — position within the current sequence (chords + pattern + rest).
@@ -100,3 +108,4 @@ Roots are clamped so the whole pattern stays between C3 and C6 (`MIN_MIDI` / `MA
 | `samples/piano/` | Salamander Grand Piano notes every 3 semitones, CC-BY (see `CREDITS.md`) |
 | `js/scheduler.js` | lookahead scheduler and transport state |
 | `js/app.js` | DOM wiring and `localStorage` settings |
+| `manifest.json`, `service-worker.js`, `icons/` | PWA install + offline support |

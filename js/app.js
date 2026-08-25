@@ -330,3 +330,9 @@ setDirection(settings.direction);
 renderPlayState();
 renderKey();
 requestAnimationFrame(frame);
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js');
+    });
+}
