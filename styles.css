@@ -233,7 +233,17 @@ input[type="range"] { font: inherit; }
 
 .wide:hover { border-color: var(--accent); }
 
-.hint { margin: 8px 0 0; color: var(--muted); font-size: 0.75rem; }
+.info {
+  display: inline-block;
+  margin-left: 4px;
+  font-size: 0.85em;
+  text-transform: none;
+  letter-spacing: normal;
+  cursor: help;
+}
+
+.info:hover,
+.info:focus-visible { color: var(--text); }
 
 .key-picker {
   position: absolute;
