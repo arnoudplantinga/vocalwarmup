@@ -73,6 +73,8 @@ h1 { font-size: 1.25rem; margin: 0; letter-spacing: 0.02em; }
 button,
 input[type="range"] { font: inherit; }
 
+button { -webkit-tap-highlight-color: transparent; }
+
 .header-controls {
   display: flex;
   align-items: center;
