@@ -37,6 +37,12 @@ export async function ensureAudio() {
     master.connect(ctx.destination);
   }
   if (ctx.state === 'suspended') await ctx.resume();
+  // Some browsers (notably Firefox, when a site's Autoplay permission is set
+  // to block audio) resolve resume() without actually reaching 'running', so
+  // the graph plays silently with no error anywhere else in the call chain.
+  if (ctx.state !== 'running') {
+    throw new Error('Audio is blocked for this site — check your browser’s autoplay/sound permissions');
+  }
   await loadSamples();
   return ctx;
 }
