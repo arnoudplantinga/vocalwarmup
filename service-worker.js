@@ -1,4 +1,4 @@
-const CACHE_NAME = "vocal-warmup-v2";
+const CACHE_NAME = "vocal-warmup-v3";
 
 // Large, immutable assets: fine to serve straight from cache once fetched.
 const CACHE_FIRST_URLS = [
@@ -20,6 +20,7 @@ const CACHE_FIRST_URLS = [
   "icons/icon-512.png",
   "icons/icon-maskable-512.png",
   "icons/apple-touch-icon.png",
+  "favicon.ico",
 ];
 
 // The app shell: changes on every deploy, so prefer the network and only

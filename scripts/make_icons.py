@@ -55,8 +55,20 @@ def make_icon(size, maskable=False, out_path=None):
     print(f"wrote {out_path} ({size}x{size})")
 
 
+def make_favicon(out_path):
+    # Multi-resolution .ico at the conventional root path: some icon-fetching
+    # code (browser widgets, bookmark/shortcut caches) looks there directly
+    # instead of parsing the page's <link rel="icon"> or the manifest.
+    sizes = [16, 32, 48]
+    img, draw = rounded_bg(max(sizes), ACCENT, corner_ratio=0.18)
+    draw_keys(draw, max(sizes), scale=1.0)
+    img.save(out_path, format="ICO", sizes=[(s, s) for s in sizes])
+    print(f"wrote {out_path} ({sizes})")
+
+
 if __name__ == "__main__":
     make_icon(192, out_path="icons/icon-192.png")
     make_icon(512, out_path="icons/icon-512.png")
     make_icon(512, maskable=True, out_path="icons/icon-maskable-512.png")
     make_icon(180, out_path="icons/apple-touch-icon.png")
+    make_favicon("favicon.ico")
