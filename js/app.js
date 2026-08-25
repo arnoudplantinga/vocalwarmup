@@ -86,8 +86,11 @@ function applyTheme() {
     el.theme.title = `Switch to ${other} theme`;
 }
 
+const ICON_PLAY = '<svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path d="M6 4l14 8-14 8z" fill="currentColor"/></svg>';
+const ICON_PAUSE = '<svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><rect x="5" y="4" width="5" height="16" fill="currentColor"/><rect x="14" y="4" width="5" height="16" fill="currentColor"/></svg>';
+
 function renderPlayState() {
-    el.playpause.textContent = transport.playing ? '⏸︎' : '▶︎';
+    el.playpause.innerHTML = transport.playing ? ICON_PAUSE : ICON_PLAY;
     el.playpause.setAttribute('aria-label', transport.playing ? 'Pause' : 'Play');
 }
 

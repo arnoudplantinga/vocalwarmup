@@ -189,6 +189,9 @@ button { -webkit-tap-highlight-color: transparent; }
   color: var(--text);
   cursor: pointer;
   font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .round.primary {
