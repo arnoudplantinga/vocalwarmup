@@ -307,3 +307,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
   color: var(--muted);
   font-size: 0.75rem;
 }
+
+/* Keyboard shortcuts are meaningless on touch-only devices with no physical keyboard. */
+@media (hover: none) and (pointer: coarse) {
+  .footer { display: none; }
+}
