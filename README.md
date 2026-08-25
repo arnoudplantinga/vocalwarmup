@@ -39,8 +39,8 @@ running the files through Jekyll.
   pressing one releases the other. Default ↑. The skip buttons still step a degree at a time while
   neither is pressed. Switching direction mid-playback finishes the in-progress sequence before
   applying the new direction to the next one. The ⟲ button next to the arrows resets: it stops
-  playback and rewinds the current exercise to its first sequence, keeping the selected exercise,
-  key, tempo, and direction.
+  playback, rewinds the current exercise to its first sequence, and sets direction back to ↑,
+  keeping the selected exercise, key, and tempo.
 
 - **Theme button** (top right) — switches between light and dark, and shows the palette it will
   switch to. Until it is used the page follows the device's `prefers-color-scheme`, tracking it

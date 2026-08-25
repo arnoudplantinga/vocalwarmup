@@ -210,6 +210,7 @@ el.forward.addEventListener('click', () => skip(1));
 
 el.reset.addEventListener('click', () => {
     closePicker();
+    setDirection(1);
     transport.reset();
     releaseWakeLock();
     renderPlayState();
