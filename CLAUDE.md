@@ -36,7 +36,7 @@ module imports) are resolved relative to the module/page, so a GitHub Pages sub-
 
 ## Architecture
 
-Four ES modules under `js/`, each owning one concern:
+Five ES modules under `js/`, each owning one concern:
 
 - **`js/exercises.js`** — pure data/config: the `EXERCISES` array (each exercise is a chord
   start/end + a list of `{ interval, beats }` notes relative to a root, a scale, and a step
@@ -54,10 +54,16 @@ Four ES modules under `js/`, each owning one concern:
   recently scheduled events used to derive playback progress. Enforces the singable range via
   `MIN_MIDI`/`MAX_MIDI` (C3–C6) and calls `onLimit`/`onSequence` callbacks.
 - **`js/app.js`** — DOM wiring: transport controls, key/tempo/direction pickers, theme toggle,
-  and `localStorage`-backed settings. This is the only module that touches the DOM.
+  language toggle, and `localStorage`-backed settings. This is the only module that touches the
+  DOM.
+- **`js/i18n.js`** — translations. A flat `STRINGS` dictionary per language (currently `en` and
+  `nl`), `detectLanguage()` (reads `navigator.languages`), and `t()`/`applyTranslations()` used by
+  `app.js` to render text and `[data-i18n]`/`[data-i18n-attr]` attributes in `index.html`. To add a
+  language, add its dictionary (every key `en` has) and list its tag in `SUPPORTED` — nothing else
+  changes. Exercise names live here too, keyed by each exercise's `nameKey` in `exercises.js`.
 
 Data flows one way: `exercises.js` (config) → `scheduler.js` (timing/sequencing, using
-`audio.js` for actual sound) → `app.js` (UI, driving the `Transport`).
+`audio.js` for actual sound) → `app.js` (UI, driving the `Transport`, translating via `i18n.js`).
 
 See `README.md` for user-facing behavior (controls, exercise table, how to add an exercise) —
 it's kept in sync with the code and is a good reference before changing exercise/transport logic.

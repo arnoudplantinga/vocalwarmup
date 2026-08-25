@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Vocal Warmup</title>
+<title data-i18n="app.title">Vocal Warmup</title>
 <link rel="manifest" href="manifest.json" />
 <link rel="icon" href="favicon.ico" sizes="any" />
 <link rel="icon" href="icons/icon-192.png" type="image/png" />
@@ -17,53 +17,54 @@
 <body>
 <main class="app">
   <header class="header">
-    <h1>Vocal Warmup</h1>
+    <h1 data-i18n="app.title">Vocal Warmup</h1>
     <div class="header-controls">
-      <select id="exercise" class="exercise-select" aria-label="Exercise"></select>
-      <button id="theme" class="theme-toggle" aria-label="Colour theme">◐</button>
+      <select id="exercise" class="exercise-select" aria-label="Exercise" data-i18n-attr="aria-label:exercise.select.ariaLabel"></select>
+      <button id="lang" class="theme-toggle" aria-label="Language" data-i18n-attr="aria-label:lang.ariaLabel">NL</button>
+      <button id="theme" class="theme-toggle" aria-label="Colour theme" data-i18n-attr="aria-label:theme.ariaLabel">◐</button>
     </div>
   </header>
 
   <section class="stage">
     <div class="key-display">
       <span id="key-now" class="key-now">C4</span>
-      <span class="key-label">current key</span>
+      <span class="key-label" data-i18n="key.label">current key</span>
     </div>
-    <div class="progress" role="progressbar" aria-label="Sequence progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+    <div class="progress" role="progressbar" aria-label="Sequence progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-i18n-attr="aria-label:progress.ariaLabel">
       <div id="progress-fill" class="progress-fill"></div>
     </div>
     <p id="status" class="status" role="status"></p>
   </section>
 
   <section class="direction">
-    <div class="segmented" role="group" aria-label="Direction — neither pressed stays in the current key">
-      <button id="dir-down" class="seg arrow" aria-pressed="false" aria-label="Transpose down each sequence" title="Down">&darr;</button>
-      <button id="dir-up" class="seg arrow active" aria-pressed="true" aria-label="Transpose up each sequence" title="Up">&uarr;</button>
+    <div class="segmented" role="group" aria-label="Direction — neither pressed stays in the current key" data-i18n-attr="aria-label:direction.ariaLabel">
+      <button id="dir-down" class="seg arrow" aria-pressed="false" aria-label="Transpose down each sequence" title="Down" data-i18n-attr="aria-label:direction.down.ariaLabel;title:direction.down.title">&darr;</button>
+      <button id="dir-up" class="seg arrow active" aria-pressed="true" aria-label="Transpose up each sequence" title="Up" data-i18n-attr="aria-label:direction.up.ariaLabel;title:direction.up.title">&uarr;</button>
     </div>
-    <button id="reset" class="round reset" aria-label="Reset exercise" title="Reset exercise">&#8634;</button>
+    <button id="reset" class="round reset" aria-label="Reset exercise" title="Reset exercise" data-i18n-attr="aria-label:reset.ariaLabel;title:reset.ariaLabel">&#8634;</button>
   </section>
 
   <section class="transport">
-    <button id="back" class="round" aria-label="Previous sequence">&#9664;&#9664;</button>
+    <button id="back" class="round" aria-label="Previous sequence" data-i18n-attr="aria-label:back.ariaLabel">&#9664;&#9664;</button>
     <button id="playpause" class="round primary" aria-label="Play"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path d="M6 4l14 8-14 8z" fill="currentColor"/></svg></button>
-    <button id="forward" class="round" aria-label="Next sequence">&#9654;&#9654;</button>
+    <button id="forward" class="round" aria-label="Next sequence" data-i18n-attr="aria-label:forward.ariaLabel">&#9654;&#9654;</button>
   </section>
 
   <section class="controls">
     <div class="control">
-      <label>Starting key <span id="key-info" class="info" tabindex="0" role="button" aria-label="What is the starting key?" data-tooltip="Key of the exercise — sequences climb its scale. Saved as the starting key for all exercises.">&#9432;</span></label>
+      <label><span data-i18n="startingKey.label">Starting key</span> <span id="key-info" class="info" tabindex="0" role="button" aria-label="What is the starting key?" data-tooltip="Key of the exercise — sequences climb its scale. Saved as the starting key for all exercises." data-i18n-attr="aria-label:keyInfo.ariaLabel;data-tooltip:keyInfo.tooltip">&#9432;</span></label>
       <button id="key-button" class="wide" aria-haspopup="true" aria-expanded="false">C4</button>
       <div id="key-picker" class="key-picker" hidden></div>
     </div>
 
     <div class="control">
-      <label for="tempo">Tempo <span id="tempo-value" class="mono">82</span> BPM</label>
+      <label for="tempo"><span data-i18n="tempo.label">Tempo</span> <span id="tempo-value" class="mono">82</span> <span data-i18n="tempo.unit">BPM</span></label>
       <input id="tempo" type="range" min="40" max="160" step="1" value="82" />
-      <button id="a-tempo" class="ghost">a tempo</button>
+      <button id="a-tempo" class="ghost" data-i18n="aTempo.label">a tempo</button>
     </div>
   </section>
 
-  <footer class="footer">Space = play/pause &middot; &larr; / &rarr; = previous / next sequence &middot; &uarr; / &darr; = direction</footer>
+  <footer class="footer" data-i18n="footer.text">Space = play/pause &middot; &larr; / &rarr; = previous / next sequence &middot; &uarr; / &darr; = direction</footer>
 </main>
 <script type="module" src="js/app.js"></script>
 </body>

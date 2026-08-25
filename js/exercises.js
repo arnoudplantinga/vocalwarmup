@@ -18,7 +18,7 @@ export const SCALES = {
 export const EXERCISES = [
     {
         id: 'five-note-scale',
-        name: 'Five-Note Scale',
+        nameKey: 'exercise.five-note-scale',
         chordStart: { intervals: [0, 4, 7], beats: 2 },
         notes: [
             { interval: 0, beats: 0.5 },
@@ -38,7 +38,7 @@ export const EXERCISES = [
     },
     {
         id: 'octave-arpeggio',
-        name: 'Octave Arpeggio',
+        nameKey: 'exercise.octave-arpeggio',
         chordStart: { intervals: [0, 4, 7], beats: 1.5 },
         notes: [
             { interval: 0, beats: 0.5 },
@@ -56,7 +56,7 @@ export const EXERCISES = [
     },
     {
         id: 'sustained-fifth',
-        name: 'Sustained Fifth',
+        nameKey: 'exercise.sustained-fifth',
         chordStart: { intervals: [0, 4, 7], beats: 1 },
         notes: [
             { interval: 0, beats: 1 },
@@ -70,7 +70,7 @@ export const EXERCISES = [
     },
     {
         id: 'octave-siren',
-        name: 'Octave Siren (lip trill)',
+        nameKey: 'exercise.octave-siren',
         chordStart: { intervals: [0, 4, 7], beats: 1 },
         notes: [
             { interval: 0, beats: 0.25 },

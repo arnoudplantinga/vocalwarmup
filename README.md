@@ -53,6 +53,9 @@ colour changes.
 - **Theme button** (top right) — switches between light and dark, and shows the palette it will
   switch to. Until it is used the page follows the device's `prefers-color-scheme`, tracking it
   live; once used, the choice is pinned with `data-theme` on `<html>` and remembered.
+- **Language button** (top right) — switches between English and Dutch, and shows the language it
+  will switch to. Until it is used the page follows the browser's language (Dutch if any of
+  `navigator.languages` is a Dutch tag, English otherwise); once used, the choice is remembered.
 
 Settings persist in `localStorage`.
 
