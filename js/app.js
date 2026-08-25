@@ -87,7 +87,7 @@ function applyTheme() {
 }
 
 function renderPlayState() {
-    el.playpause.textContent = transport.playing ? '⏸' : '▶';
+    el.playpause.textContent = transport.playing ? '⏸︎' : '▶︎';
     el.playpause.setAttribute('aria-label', transport.playing ? 'Pause' : 'Play');
 }
 
