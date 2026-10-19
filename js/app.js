@@ -3,9 +3,11 @@ import { MAX_MIDI, MIN_MIDI, Transport } from './scheduler.js';
 import { applyTranslations, detectLanguage, setLang, t } from './i18n.js';
 
 const NOTE_NAMES = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
-const DEFAULT_BPM = 82;
+const FALLBACK_BPM = 82; // for an exercise without a defaultBpm
 const DARK_QUERY = window.matchMedia('(prefers-color-scheme: dark)');
 const STORE_KEY = 'vocal-warmup-settings';
+
+const defaultBpm = (exercise) => exercise.defaultBpm || FALLBACK_BPM;
 
 const noteName = (midi) => `${NOTE_NAMES[midi % 12]}${Math.floor(midi / 12) - 1}`;
 
@@ -33,6 +35,7 @@ const el = {
 };
 
 const settings = loadSettings();
+settings.bpm = clampBpm(settings.bpm); // a stored tempo may predate the slider's current range
 const transport = new Transport(getExercise(settings.exerciseId), {
     tonicMidi: settings.startMidi,
     bpm: settings.bpm,
@@ -42,7 +45,7 @@ const transport = new Transport(getExercise(settings.exerciseId), {
 function loadSettings() {
     const defaults = {
         startMidi: 60,
-        bpm: DEFAULT_BPM,
+        bpm: defaultBpm(EXERCISES[0]),
         direction: 1,
         exerciseId: EXERCISES[0].id,
         theme: null, // no choice made yet: follow the device
@@ -53,6 +56,13 @@ function loadSettings() {
     } catch (e) {
         return defaults;
     }
+}
+
+/** Keep a tempo within the slider's range. */
+function clampBpm(bpm) {
+    const min = Number(el.tempo.min);
+    const max = Number(el.tempo.max);
+    return Math.min(max, Math.max(min, Number(bpm) || defaultBpm(EXERCISES[0])));
 }
 
 function saveSettings() {
@@ -214,6 +224,7 @@ el.exercise.addEventListener('change', () => {
     transport.pause();
     setDirection(1);
     transport.setExercise(getExercise(settings.exerciseId));
+    setBpm(defaultBpm(transport.exercise));
     renderPlayState();
     renderKey();
 });
@@ -308,18 +319,17 @@ DARK_QUERY.addEventListener('change', () => {
     if (!settings.theme) applyTheme();
 });
 
-el.tempo.addEventListener('input', () => {
-    const bpm = Number(el.tempo.value);
+function setBpm(bpm) {
+    el.tempo.value = bpm;
     el.tempoValue.textContent = bpm;
     transport.setBpm(bpm);
     settings.bpm = bpm;
     saveSettings();
-});
+}
 
-el.aTempo.addEventListener('click', () => {
-    el.tempo.value = DEFAULT_BPM;
-    el.tempo.dispatchEvent(new Event('input'));
-});
+el.tempo.addEventListener('input', () => setBpm(Number(el.tempo.value)));
+
+el.aTempo.addEventListener('click', () => setBpm(defaultBpm(transport.exercise)));
 
 function setDirection(dir) {
     transport.setDirection(dir);

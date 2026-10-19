@@ -9,6 +9,7 @@
 //              { mode: 'scale', amount: 1 }     -> one scale degree (stays in key)
 //              { mode: 'chromatic', amount: 1 } -> a fixed number of semitones
 //   restBeats: silence after the closing chord, before the next sequence starts
+//   defaultBpm: tempo the exercise starts at when selected, and what *a tempo* snaps back to
 
 export const SCALES = {
     major: [0, 2, 4, 5, 7, 9, 11],
@@ -35,6 +36,7 @@ export const EXERCISES = [
         scale: 'major',
         step: { mode: 'chromatic', amount: 1 },
         restBeats: 0,
+        defaultBpm: 80,
     },
     {
         id: 'octave-arpeggio',
@@ -53,6 +55,7 @@ export const EXERCISES = [
         scale: 'major',
         step: { mode: 'chromatic', amount: 1 },
         restBeats: 0,
+        defaultBpm: 70,
     },
     {
         id: 'sustained-fifth',
@@ -67,6 +70,7 @@ export const EXERCISES = [
         scale: 'major',
         step: { mode: 'chromatic', amount: 1 },
         restBeats: 1,
+        defaultBpm: 82,
     },
     {
         id: 'octave-siren',
@@ -93,6 +97,7 @@ export const EXERCISES = [
         scale: 'major',
         step: { mode: 'chromatic', amount: 1 },
         restBeats: 0.5,
+        defaultBpm: 82,
     },
 ];
 
