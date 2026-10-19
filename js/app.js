@@ -35,17 +35,17 @@ const el = {
 };
 
 const settings = loadSettings();
-settings.bpm = clampBpm(settings.bpm); // a stored tempo may predate the slider's current range
+delete settings.bpm; // older versions stored one tempo shared by every exercise
 const transport = new Transport(getExercise(settings.exerciseId), {
     tonicMidi: settings.startMidi,
-    bpm: settings.bpm,
+    bpm: bpmFor(getExercise(settings.exerciseId)),
     direction: settings.direction,
 });
 
 function loadSettings() {
     const defaults = {
         startMidi: 60,
-        bpm: defaultBpm(EXERCISES[0]),
+        tempos: {}, // exercise id -> tempo; an exercise without one uses its defaultBpm
         direction: 1,
         exerciseId: EXERCISES[0].id,
         theme: null, // no choice made yet: follow the device
@@ -62,7 +62,14 @@ function loadSettings() {
 function clampBpm(bpm) {
     const min = Number(el.tempo.min);
     const max = Number(el.tempo.max);
-    return Math.min(max, Math.max(min, Number(bpm) || defaultBpm(EXERCISES[0])));
+    return Math.min(max, Math.max(min, bpm));
+}
+
+/** The tempo an exercise plays at: the one last set for it, or its default. */
+function bpmFor(exercise) {
+    const stored = Number(settings.tempos?.[exercise.id]);
+    // A stored tempo may predate the slider's current range.
+    return stored ? clampBpm(stored) : defaultBpm(exercise);
 }
 
 function saveSettings() {
@@ -224,7 +231,7 @@ el.exercise.addEventListener('change', () => {
     transport.pause();
     setDirection(1);
     transport.setExercise(getExercise(settings.exerciseId));
-    setBpm(defaultBpm(transport.exercise));
+    showBpm(bpmFor(transport.exercise));
     renderPlayState();
     renderKey();
 });
@@ -319,17 +326,26 @@ DARK_QUERY.addEventListener('change', () => {
     if (!settings.theme) applyTheme();
 });
 
-function setBpm(bpm) {
+function showBpm(bpm) {
     el.tempo.value = bpm;
     el.tempoValue.textContent = bpm;
     transport.setBpm(bpm);
-    settings.bpm = bpm;
-    saveSettings();
 }
 
-el.tempo.addEventListener('input', () => setBpm(Number(el.tempo.value)));
+el.tempo.addEventListener('input', () => {
+    const bpm = Number(el.tempo.value);
+    showBpm(bpm);
+    settings.tempos = { ...settings.tempos, [transport.exercise.id]: bpm };
+    saveSettings();
+});
 
-el.aTempo.addEventListener('click', () => setBpm(defaultBpm(transport.exercise)));
+// Forget the exercise's own tempo, so it follows its default again.
+el.aTempo.addEventListener('click', () => {
+    const { [transport.exercise.id]: _, ...rest } = settings.tempos || {};
+    settings.tempos = rest;
+    saveSettings();
+    showBpm(defaultBpm(transport.exercise));
+});
 
 function setDirection(dir) {
     transport.setDirection(dir);
@@ -383,8 +399,7 @@ transport.onLimit = () => {
 
 // --- init --------------------------------------------------------------
 
-el.tempo.value = settings.bpm;
-el.tempoValue.textContent = settings.bpm;
+showBpm(transport.bpm);
 applyLanguage();
 setDirection(settings.direction);
 renderPlayState();

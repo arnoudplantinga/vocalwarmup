@@ -40,9 +40,9 @@ colour changes.
 - **Key** — the key of the exercise. Sequences walk up (or down) that key's scale, so from C4 the
   roots go C D E F G A B C. Also saved as the starting key for every exercise. Close the picker by
   choosing a key, pressing Escape, or clicking anywhere outside it.
-- **Tempo** — 40–120 BPM. Each exercise has its own default (`defaultBpm` in `js/exercises.js`),
-  applied when the exercise is selected; *a tempo* snaps back to it. Changes apply within
-  ~150 ms, mid-note if need be.
+- **Tempo** — 40–120 BPM, remembered per exercise. Each exercise starts at its own default
+  (`defaultBpm` in `js/exercises.js`) until you move the slider; *a tempo* snaps back to the
+  default. Changes apply within ~150 ms, mid-note if need be.
 - **↑ / ↓** — two toggles: ↑ transposes a scale degree up after each sequence, ↓ transposes down,
   and with neither pressed the exercise stays in the current key. They are mutually exclusive, so
   pressing one releases the other. Default ↑. The skip buttons still step a degree at a time while
@@ -96,7 +96,7 @@ Append one object to `EXERCISES` in `js/exercises.js`; nothing else changes.
   step: { mode: 'scale', amount: 1 }, // one scale degree per sequence
                                       // or { mode: 'chromatic', amount: 1 } for fixed semitones
   restBeats: 1,                       // silence before the next sequence
-  defaultBpm: 80,                     // tempo applied when the exercise is selected
+  defaultBpm: 80,                     // starting tempo, until the slider is moved
 }
 ```
 

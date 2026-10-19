@@ -9,7 +9,7 @@
 //              { mode: 'scale', amount: 1 }     -> one scale degree (stays in key)
 //              { mode: 'chromatic', amount: 1 } -> a fixed number of semitones
 //   restBeats: silence after the closing chord, before the next sequence starts
-//   defaultBpm: tempo the exercise starts at when selected, and what *a tempo* snaps back to
+//   defaultBpm: tempo the exercise plays at until the slider is moved, and what *a tempo* snaps back to
 
 export const SCALES = {
     major: [0, 2, 4, 5, 7, 9, 11],
