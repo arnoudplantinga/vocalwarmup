@@ -40,8 +40,9 @@ colour changes.
 - **Key** — the key of the exercise. Sequences walk up (or down) that key's scale, so from C4 the
   roots go C D E F G A B C. Also saved as the starting key for every exercise. Close the picker by
   choosing a key, pressing Escape, or clicking anywhere outside it.
-- **Tempo** — 40–160 BPM, default 100 (`DEFAULT_BPM` in `js/app.js`); *a tempo* snaps back to it.
-  Changes apply within ~150 ms, mid-note if need be.
+- **Tempo** — 40–120 BPM, remembered per exercise. Each exercise starts at its own default
+  (`defaultBpm` in `js/exercises.js`) until you move the slider; *a tempo* snaps back to the
+  default. Changes apply within ~150 ms, mid-note if need be.
 - **↑ / ↓** — two toggles: ↑ transposes a scale degree up after each sequence, ↓ transposes down,
   and with neither pressed the exercise stays in the current key. They are mutually exclusive, so
   pressing one releases the other. Default ↑. The skip buttons still step a degree at a time while
@@ -61,12 +62,12 @@ Settings persist in `localStorage`.
 
 ## Exercises
 
-| Exercise | Pattern (from the root) | Length at 100 BPM |
-| --- | --- | --- |
-| Five-Note Scale | 1 2 3 4 5 4 3 2 1, eighth notes | 3.6 s |
-| Octave Arpeggio | 1 3 5 8 5 3 1, eighth notes | 3.3 s |
-| Sustained Fifth | root, fifth, root — one beat each | 3.0 s |
-| Octave Siren (lip trill) | scale run up an octave and back, sixteenths | 3.8 s |
+| Exercise | Pattern (from the root) | Default tempo | Length at default tempo |
+| --- | --- | --- | --- |
+| Five-Note Scale | 1 2 3 4 5 4 3 2 1, eighth notes | 80 BPM | 6.0 s |
+| Octave Arpeggio | 1 3 5 8 5 3 1, eighth notes | 70 BPM | 5.1 s |
+| Sustained Fifth | root, fifth, root — one beat each | 80 BPM | 4.5 s |
+| Octave Siren (lip trill) | scale run up an octave and back, sixteenths | 80 BPM | 5.4 s |
 
 Durations are in beats, so the tempo slider is the pulse you count: pattern notes are eighths
 (two per beat), and each sequence is framed by a chord on its root — `chordStart` before the
@@ -95,6 +96,7 @@ Append one object to `EXERCISES` in `js/exercises.js`; nothing else changes.
   step: { mode: 'scale', amount: 1 }, // one scale degree per sequence
                                       // or { mode: 'chromatic', amount: 1 } for fixed semitones
   restBeats: 1,                       // silence before the next sequence
+  defaultBpm: 80,                     // starting tempo, until the slider is moved
 }
 ```
 

@@ -23,7 +23,7 @@ function eventsFor(exercise) {
 }
 
 export class Transport {
-  constructor(exercise, { tonicMidi = 60, bpm = 82, direction = 1 } = {}) {
+  constructor(exercise, { tonicMidi = 60, bpm = 80, direction = 1 } = {}) {
     this.tonicMidi = tonicMidi; // the key of the exercise; sequence 0 starts here
     this.index = 0; // sequence being scheduled (steps along the scale)
     this.displayIndex = 0; // sequence currently sounding
