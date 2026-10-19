@@ -66,8 +66,8 @@ Settings persist in `localStorage`.
 | --- | --- | --- | --- |
 | Five-Note Scale | 1 2 3 4 5 4 3 2 1, eighth notes | 80 BPM | 6.0 s |
 | Octave Arpeggio | 1 3 5 8 5 3 1, eighth notes | 70 BPM | 5.1 s |
-| Sustained Fifth | root, fifth, root — one beat each | 82 BPM | 4.4 s |
-| Octave Siren (lip trill) | scale run up an octave and back, sixteenths | 82 BPM | 5.3 s |
+| Sustained Fifth | root, fifth, root — one beat each | 80 BPM | 4.5 s |
+| Octave Siren (lip trill) | scale run up an octave and back, sixteenths | 80 BPM | 5.4 s |
 
 Durations are in beats, so the tempo slider is the pulse you count: pattern notes are eighths
 (two per beat), and each sequence is framed by a chord on its root — `chordStart` before the
@@ -96,7 +96,7 @@ Append one object to `EXERCISES` in `js/exercises.js`; nothing else changes.
   step: { mode: 'scale', amount: 1 }, // one scale degree per sequence
                                       // or { mode: 'chromatic', amount: 1 } for fixed semitones
   restBeats: 1,                       // silence before the next sequence
-  defaultBpm: 82,                     // tempo applied when the exercise is selected
+  defaultBpm: 80,                     // tempo applied when the exercise is selected
 }
 ```
 

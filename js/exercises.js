@@ -70,7 +70,7 @@ export const EXERCISES = [
         scale: 'major',
         step: { mode: 'chromatic', amount: 1 },
         restBeats: 1,
-        defaultBpm: 82,
+        defaultBpm: 80,
     },
     {
         id: 'octave-siren',
@@ -97,7 +97,7 @@ export const EXERCISES = [
         scale: 'major',
         step: { mode: 'chromatic', amount: 1 },
         restBeats: 0.5,
-        defaultBpm: 82,
+        defaultBpm: 80,
     },
 ];
 

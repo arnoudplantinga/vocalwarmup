@@ -3,7 +3,7 @@ import { MAX_MIDI, MIN_MIDI, Transport } from './scheduler.js';
 import { applyTranslations, detectLanguage, setLang, t } from './i18n.js';
 
 const NOTE_NAMES = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
-const FALLBACK_BPM = 82; // for an exercise without a defaultBpm
+const FALLBACK_BPM = 80; // for an exercise without a defaultBpm
 const DARK_QUERY = window.matchMedia('(prefers-color-scheme: dark)');
 const STORE_KEY = 'vocal-warmup-settings';
 
